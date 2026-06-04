@@ -17,6 +17,5 @@ router.post("/addTocart",authorize('member'), postCart);
 router.get("/allCart",authorize('admin'), getCartById);
 router.patch("/:productId",authorize('member'), updateCart);
 router.delete("/:productId",authorize('member'), deleteSpecificProduct);
-
+   
 export default router;
-  

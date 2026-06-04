@@ -53,8 +53,8 @@ export const registerUser = errorHandling(async (req, res, next) => {
 
 export const UserById = errorHandling(async (req, res, next) => {
   const id = req.userId;
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return next(new httpError(400, "invalid user Id"));
+  // console.log(req.userId);
+  
   const foundOne = await userModel.findById(id);
   if (!foundOne) return next(new httpError(400, "User not found"));
   res.json({
@@ -194,20 +194,20 @@ export const loginUser = errorHandling(async (req, res, next) => {
   const accesstoken = jwt.sign(
     { id: user._id, email, role: user.role },
     process.env.LOGIN_KEY,
-    { expiresIn: "7d" },
+    { expiresIn: "15m" },
   );
-  // const refreshToken = jwt.sign(
-  //   { id: user._id, email, role: user.role },
-  //   process.env.LOGIN_KEY,
-  // );
+  const refreshToken = jwt.sign(
+    { id: user._id, email, role: user.role },
+    process.env.LOGIN_KEY,
+  );
 
-  // res.cookie("refreshToken", refreshToken, {
-  //   httpOnly: true,
-  //   secure: false,
-  //   sameSite: "lax",
-  //   maxAge: 7 * 24 * 60 * 60 * 1000,
-  //   path: "/",
-  // });
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/",
+  });
 
   if (!accesstoken) return next(new httpError(404, "something went wrong"));
   // console.log(accesstoken);
@@ -224,20 +224,24 @@ export const loginUser = errorHandling(async (req, res, next) => {
 // refresh token to make user active all time until he logout
 
 //////////////////////////////////////////////
-// export const refreshNewToken = errorHandling(async (req, res, next) => {
-//   const { refreshToken } = req.cookies;
-//   console.log(req.cookies);
+export const refreshNewToken = errorHandling(async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+  console.log(req.cookies);
 
-//   if (!refreshToken) return next(new httpError(401, "You must login first"));
-//   try {
-//     const decoded = jwt.verify(refreshToken, process.env.LOGIN_KEY);
-//     const newToken = jwt.sign(
-//       { id: decoded._id, email: decoded.email, role: decoded.role },
-//       process.env.LOGIN_KEY,
-//       { expiresIn: "15m" },
-//     );
-//     res.json({ newToken });
-//   } catch (error) {
-//     next(new httpError(403, "token expired"));
-//   }
-// });
+  if (!refreshToken) return next(new httpError(401, "You must login first"));
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.LOGIN_KEY);
+      req.userId = decoded.id;
+    req.role = decoded.role;  
+    console.log(decoded);
+    
+    const newToken = jwt.sign(
+      { id: decoded.id, email: decoded.email, role: decoded.role },
+      process.env.LOGIN_KEY,
+      { expiresIn: "7d" },
+    );
+    res.json({accesstoken: newToken });
+  } catch (error) {
+    next(new httpError(403, "token expired"));
+  }
+});

@@ -8,7 +8,8 @@ import {
   loginUser,
   changePassword,
   changeRole,
-  infoUser
+  infoUser,
+  refreshNewToken,
 
 } from "../controllers/user.controller.js";
 import {
@@ -24,7 +25,7 @@ router.get("/",auth,authorize('admin'), allUser);
 router.get("/me",auth, infoUser);
 router.post("/", validationPostUsers, mainValidation, registerUser);
 router.post("/login", loginUser);
-// router.post("/login/refresh", refreshNewToken);
+router.post("/refreshToken", refreshNewToken);
 router.get("/profile",auth,authorize('admin','member'), UserById);
 router.patch("/editeProfile",auth,authorize('member','admin'), validatePatchUser, mainValidation, updateUser);
 router.patch("/changePasaword",auth,authorize('member'), changePassword);

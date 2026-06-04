@@ -42,10 +42,12 @@ const cartItems = cart.products.map(item => ({
 
 //////////////////////////////////////////////
 export const postCart = errorHandling(async (req, res, next) => {
-  const  productId  = req.body.products.product[0];
-  console.log(req.body.products.product[0]);
+  const  productId  = req.body.products[0].product;
+  // const  productId  = req.body.products.product[0];
+  console.log(req.body.products[0].product);
   
-  const { quantity } = req.body.products;
+  const { quantity } = req.body.products[0];
+  // const { quantity } = req.body.products;
   if (!productId) return next(new httpError(400, "Invalid product id"));
 
   // make sure we search by the same field used in the schema
@@ -102,7 +104,7 @@ export const getCartById = errorHandling(async (req, res, next) => {
 export const updateCart = errorHandling(async (req, res, next) => {
   const { quantity } = req.body;
   const { productId } = req.params;
-// console.log(quantity , productId);
+console.log(quantity , productId);
 
   const cart = await cartModel.findOne({ userName: req.userId });
 
