@@ -42,18 +42,18 @@ export const validationPostUsers = [
     .isLength({ min: 6, max: 20 })
     .withMessage("Password between  6 and 20"),
     //
-  body("confirmedPassword")
-    .notEmpty()
-    .withMessage("confirmed password is required")
-    .trim()
-    .isLength({ min: 6, max: 20 })
-    .withMessage("pass btw 6 and 20")
-    .custom(async (value, { req, next }) => {
-      if (value != req.body.password) {
-        throw new Error("Pssword doesn't match try again");
-      }
-      return true;
-    }),
+  // body("confirmedPassword")
+  //   .notEmpty()
+  //   .withMessage("confirmed password is required")
+  //   .trim()
+  //   .isLength({ min: 6, max: 20 })
+  //   .withMessage("pass btw 6 and 20")
+  //   .custom(async (value, { req, next }) => {
+  //     if (value != req.body.password) {
+  //       throw new Error("Pssword doesn't match try again");
+  //     }
+  //     return true;
+  //   }),
 ];
 
 //////////////////////////////////////////////

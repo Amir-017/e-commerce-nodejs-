@@ -5,10 +5,12 @@ import { productModel } from "./models/product.model.js";
 
 dotenv.config();
 
+const mongoUri = process.env.MONGO_URI || process.env.MONGO_URL;
+
 const seedProducts = async () => {
   try {
     // اتصال بالداتابيز
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(mongoUri);
     console.log("✓ Connected to DB");
 
     // امسح القديم
