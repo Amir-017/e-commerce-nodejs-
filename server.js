@@ -1,25 +1,15 @@
 import app from "./app.js";
 import mongoose from "mongoose";
 
-const mongoUri = process.env.MONGO_URL;
-
-//run server:
-app.listen(process.env.PORT, () => {
-  console.log("server run at port " + process.env.PORT);
-});
-
-//connect to database:
 mongoose
-  .connect(mongoUri)
-  .then(async () => {
+  .connect(process.env.MONGO_URL)
+  .then(() => {
     console.log("connected to db");
-  })
 
+    app.listen(process.env.PORT, () => {
+      console.log(`server running on ${process.env.PORT}`);
+    });
+  })
   .catch((err) => {
-    console.log(process.env.MONGO_URL);
-    
-    console.log("Database connection error:", err.message);
-    console.log(
-      "If you are using mongodb+srv, make sure your network can resolve Atlas SRV records or switch MONGO_URL to a reachable mongodb:// connection string."
-    );
+    console.log("Database connection error:", err);
   });

@@ -17,9 +17,11 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(cors())
 //routes:
+// for testing the server is working on vercel or not:
 app.get("/", (req, res) => {
   return res.json({ mss: "welcome to ecommerce api" });
 });
+// main routes:
 app.use("/category", categoryRouter);
 app.use("/products", productRouter);
 app.use("/users", userRouter);
