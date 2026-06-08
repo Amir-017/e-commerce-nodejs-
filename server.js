@@ -1,7 +1,7 @@
 import app from "./app.js";
 import mongoose from "mongoose";
 
-const mongoUri = process.env.MONGO_URI || process.env.MONGO_URL;
+const mongoUri = process.env.MONGO_URL;
 
 //run server:
 app.listen(process.env.PORT, () => {
@@ -12,14 +12,14 @@ app.listen(process.env.PORT, () => {
 mongoose
   .connect(mongoUri)
   .then(async () => {
-    console.log("✓ connected to db");
+    console.log("connected to db");
   })
 
   .catch((err) => {
-    console.log(process.env.MONGO_URI);
+    console.log(process.env.MONGO_URL);
     
-    console.log("❌ Database connection error:", err.message);
+    console.log("Database connection error:", err.message);
     console.log(
-      "If you are using mongodb+srv, make sure your network can resolve Atlas SRV records or switch MONGO_URI to a reachable mongodb:// connection string."
+      "If you are using mongodb+srv, make sure your network can resolve Atlas SRV records or switch MONGO_URL to a reachable mongodb:// connection string."
     );
   });

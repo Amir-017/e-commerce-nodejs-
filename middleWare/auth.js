@@ -2,6 +2,7 @@ import { errorHandling } from "../utils/errorHandling.js";
 import { httpError } from "../utils/httpError.js";
 import jwt from "jsonwebtoken";
 export const auth = errorHandling(async (req, res, next) => {
+  // authentication :
   const { authorization } = req.headers;
 console.log(authorization);
 
@@ -16,6 +17,8 @@ console.log(authorization);
   }
 });
 
+
+// authorization :
 export const authorize = (...roles) => {
   return errorHandling(async (req, res, next) => {
     if (!roles.includes(req.role))
