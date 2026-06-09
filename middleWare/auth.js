@@ -3,11 +3,12 @@ import { httpError } from "../utils/httpError.js";
 import jwt from "jsonwebtoken";
 export const auth = errorHandling(async (req, res, next) => {
   // authentication :
-const token = req.headers.authorization?.split(" ")[1];console.log(token);
+  const { authorization } = req.headers;
+console.log(authorization);
 
-  if (!token) return next(new httpError(401, "You must login first"));
+  if (!authorization) return next(new httpError(401, "You must login first"));
   try {
-    let decoded = jwt.verify(token, process.env.LOGIN_KEY);
+    let decoded = jwt.verify(authorization, process.env.LOGIN_KEY);
     req.userId = decoded.id;
     req.role = decoded.role;    
     next();
