@@ -3,8 +3,8 @@ import { httpError } from "../utils/httpError.js";
 import jwt from "jsonwebtoken";
 export const auth = errorHandling(async (req, res, next) => {
   // authentication :
-  const authorization = req.headers.authorization;
-  console.log(authorization);
+  const { authorization } = req.headers;
+console.log(authorization);
 
   if (!authorization) return next(new httpError(401, "You must login first"));
   try {
