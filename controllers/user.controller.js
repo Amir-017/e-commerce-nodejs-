@@ -54,7 +54,7 @@ export const registerUser = errorHandling(async (req, res, next) => {
 export const UserById = errorHandling(async (req, res, next) => {
   const id = req.userId;
   // console.log(req.userId);
-  
+
   const foundOne = await userModel.findById(id);
   if (!foundOne) return next(new httpError(400, "User not found"));
   res.json({
@@ -203,8 +203,8 @@ export const loginUser = errorHandling(async (req, res, next) => {
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/",
   });
@@ -231,16 +231,16 @@ export const refreshNewToken = errorHandling(async (req, res, next) => {
   if (!refreshToken) return next(new httpError(401, "You must login first"));
   try {
     const decoded = jwt.verify(refreshToken, process.env.LOGIN_KEY);
-      req.userId = decoded.id;
-    req.role = decoded.role;  
+    req.userId = decoded.id;
+    req.role = decoded.role;
     console.log(decoded);
-    
+
     const newToken = jwt.sign(
       { id: decoded.id, email: decoded.email, role: decoded.role },
       process.env.LOGIN_KEY,
       { expiresIn: "7d" },
     );
-    res.json({accesstoken: newToken });
+    res.json({ accesstoken: newToken });
   } catch (error) {
     next(new httpError(403, "token expired"));
   }
