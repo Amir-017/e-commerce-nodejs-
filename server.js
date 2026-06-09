@@ -1,7 +1,15 @@
 import app from "./app.js";
-import { connectDB } from "./db.js";
+import mongoose from "mongoose";
 
-export default async (req, res) => {
-  await connectDB();
-  return app(req, res);
-};
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("connected to db");
+
+    app.listen(process.env.PORT, () => {
+      console.log(`server running on ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Database connection error:", err);
+  });
