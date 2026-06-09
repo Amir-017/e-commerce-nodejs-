@@ -12,7 +12,7 @@ import mongoose from "mongoose";
 //////////////////////////////////////////////
 
 export const allProduct = errorHandling(async (req, res, next) => {
-    const { search, page = 1, limit = 10 } = req.query;
+    const { search,dashboardAdmin, page = 1, limit = 10 } = req.query;
   if (search) {
   
     const skip = (page - 1) * limit;
