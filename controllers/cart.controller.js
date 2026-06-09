@@ -12,8 +12,8 @@ export const getCart = errorHandling(async (req, res, next) => {
 
   const cart = await cartModel
     .findOne({ userName: req.userId })
-    .populate("userName")
-    .populate("products.product");
+    // .populate("userName")
+    // .populate("products.product");
 
   if (!cart) return next(new httpError(404, "cart not found"));
 // console.log(cart);
@@ -45,7 +45,7 @@ export const postCart = errorHandling(async (req, res, next) => {
   const  productId  = req.body.products[0].product;
   // const  productId  = req.body.products.product[0];
   console.log(req.body.products[0].product);
-  
+   console.time("updateCart");
   const { quantity } = req.body.products[0];
   // const { quantity } = req.body.products;
   if (!productId) return next(new httpError(400, "Invalid product id"));
@@ -73,6 +73,7 @@ export const postCart = errorHandling(async (req, res, next) => {
   }
 
   await cart.save();
+  console.timeEnd("updateCart");
   res.json(cart);
 });
 

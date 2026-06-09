@@ -36,6 +36,29 @@ export const allProduct = errorHandling(async (req, res, next) => {
       products,
       totalPages: Math.ceil(total / limit),
     });
+    
+  }else if (dashboardAdmin) {
+    const skip = (page - 1) * limit;
+    // const foundOneSearched = await productModel.find() sooooooooooon.
+    const products = await productModel
+      .find({
+        // title: { $regex: search, $options: "i" },
+      })
+      .skip(skip)
+      .limit(+limit);
+
+    const total = await productModel.countDocuments({
+      // title: { $regex: search, $options: "i" },
+    });
+    console.log(typeof page);
+
+    res.json({
+      page,
+      limit,
+      total,
+      products,
+      totalPages: Math.ceil(total / limit),
+    });
   } else {
     const products = await productModel.find({}).limit(30);
     log(products.length);

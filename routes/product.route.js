@@ -26,3 +26,4 @@ router.patch("/:id",auth,authorize('admin'), updateProductValidation, mainValida
 router.delete("/:id",auth,authorize('admin'), delProduct);
 
 export default router;
+      

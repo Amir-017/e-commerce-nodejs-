@@ -22,13 +22,13 @@ import { auth, authorize } from "../middleWare/auth.js";
 const router = express.Router();
 
 router.get("/",auth,authorize('admin'), allUser);
-router.get("/me",auth, infoUser);
+router.get("/me",auth,authorize('admin','member'), infoUser);
 router.post("/", validationPostUsers, mainValidation, registerUser);
 router.post("/login", loginUser);
 router.post("/refreshToken", refreshNewToken);
 router.get("/profile",auth,authorize('admin','member'), UserById);
 router.patch("/editeProfile",auth,authorize('member','admin'), validatePatchUser, mainValidation, updateUser);
-router.patch("/changePasaword",auth,authorize('member'), changePassword);
+router.patch("/changePassword",auth,authorize('member'), changePassword);
 router.delete("/:id",auth,authorize('admin'), delUser);   
 router.patch("/:id/role",auth,authorize('admin'), changeRole);   
 
