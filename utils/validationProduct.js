@@ -53,6 +53,7 @@ export const createProductValidation = [
 
   body("images.*")
     .optional()
+    .isURL()
     .withMessage("Each image must be a valid URL"),
 
   body("inStock")
