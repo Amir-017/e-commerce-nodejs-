@@ -194,7 +194,7 @@ export const loginUser = errorHandling(async (req, res, next) => {
   const accesstoken = jwt.sign(
     { id: user._id, email, role: user.role },
     process.env.LOGIN_KEY,
-    { expiresIn: "1m" },
+    { expiresIn: "5m" },
   );
   const refreshToken = jwt.sign(
     { id: user._id, email, role: user.role },
