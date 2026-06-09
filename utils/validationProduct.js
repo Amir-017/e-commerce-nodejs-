@@ -119,13 +119,7 @@ export const updateProductValidation = [
 
   body("images").optional().isArray().withMessage("Images must be an array"),
 
-  body("images.*")
-    .optional()
-    .trim()
-    .notEmpty()
-    .withMessage("Image URL cannot be empty")
-    .isURL()
-    .withMessage("Each image must be a valid URL"),
+
 
   body("inStock")
     .optional()
