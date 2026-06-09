@@ -1,12 +1,7 @@
 import app from "./app.js";
-import mongoose from "mongoose";
+import { connectDB } from "./db.js";
 
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => {
-    console.log("connected to db");
-
-  })
-  .catch((err) => {
-    console.log("Database connection error:", err);
-  });
+export default async (req, res) => {
+  await connectDB();
+  return app(req, res);
+};
