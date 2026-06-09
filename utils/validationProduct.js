@@ -51,12 +51,7 @@ export const createProductValidation = [
 
   body("images").optional().isArray().withMessage("Images must be an array"),
 
-  body("images.*")
-    .optional()
-    .trim()
-    .notEmpty()
-    .withMessage("Image URL cannot be empty");
-
+ 
   body("inStock")
     .optional()
     .isBoolean()
