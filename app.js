@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(cors(
-  {origin: "https://market-project-connected-with-back-jmpnxo3oo.vercel.app/",
+  {origin: "https://market-project-connected-with-back-jmpnxo3oo.vercel.app",
   credentials: true,
 }
 ))
