@@ -20,7 +20,7 @@ console.log(authorization);
 
 // authorization :
 export const authorize = (...roles) => {
-  return errorHandling( (req, res, next) => {
+  return errorHandling(async (req, res, next) => {
     if (!roles.includes(req.role))
       return next(new httpError(403, "You have no permission to doing that"));
     next();
