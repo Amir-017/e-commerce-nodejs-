@@ -53,8 +53,9 @@ export const createProductValidation = [
 
   body("images.*")
     .optional()
-    .isURL()
-    .withMessage("Each image must be a valid URL"),
+    .trim()
+    .notEmpty()
+    .withMessage("Image URL cannot be empty");
 
   body("inStock")
     .optional()
