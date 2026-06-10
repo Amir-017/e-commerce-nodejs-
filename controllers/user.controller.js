@@ -185,7 +185,7 @@ export const loginUser = errorHandling(async (req, res, next) => {
   // console.log(email + " " + password);
 
   const user = await userModel.findOne({ email });
-  if (!user) return next(new httpError(404, "User not found"));
+  if (!user) return next(new httpError(404, "Sorry you don't have an account, please register first"));
 
   const hashPassword = await bcrypt.compare(password, user.password);
 
