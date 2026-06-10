@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(cors(
-  {origin: "https://github.com/Amir-017/marketProject_ConnectedWith_BackEnd.git",
+  {origin: "https://market-project-connected-with-back.vercel.app",
   credentials: true,
 }
 ))
