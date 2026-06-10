@@ -28,7 +28,7 @@ router.post("/login", loginUser);
 router.post("/refreshToken", refreshNewToken);
 router.get("/profile",auth,authorize('admin','member'), UserById);
 router.patch("/editeProfile",auth,authorize('member','admin'), validatePatchUser, mainValidation, updateUser);
-router.patch("/changePassword",auth,authorize('member'), changePassword);
+router.patch("/convertPassword",auth,authorize('member'), changePassword);
 router.delete("/:id",auth,authorize('admin'), delUser);   
 router.patch("/:id/role",auth,authorize('admin'), changeRole);   
 
