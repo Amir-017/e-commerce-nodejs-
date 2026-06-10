@@ -14,7 +14,7 @@ export const getCart = errorHandling(async (req, res, next) => {
     .findOne({ userName: req.userId })
     .populate("userName")
     .populate("products.product");
-
+   
   if (!cart) return next(new httpError(404, "cart not found"));
 // console.log(cart);
 const totalItems = cart.products.reduce((sum , item)=> sum + item.quantity,0)
