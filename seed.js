@@ -5,23 +5,23 @@ import { productModel } from "./models/product.model.js";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGO_URI || process.env.MONGO_URL;
+const mongoUrl = process.env.MONGO_URL;
 
 const seedProducts = async () => {
   try {
-    // اتصال بالداتابيز
-    await mongoose.connect(mongoUri);
+   
+    await mongoose.connect(mongoUrl);
     console.log("✓ Connected to DB");
 
-    // امسح القديم
+    
     await productModel.deleteMany({});
     console.log("✓ Old products deleted");
 
-    // اقرأ ملف JSON
+    
     const data = fs.readFileSync("./bigDataProducts.json", "utf-8");
     const jsonData = JSON.parse(data);
 
-    const products = jsonData.products;
+    const products = jsonData;
 
     const cleanProducts = products.map((p) => ({
       // id:p.id,
@@ -39,10 +39,10 @@ const seedProducts = async () => {
 
     await productModel.insertMany(cleanProducts);
 
-    console.log("🔥 Done seeding products");
+    console.log("Done seeding products");
     process.exit();
   } catch (error) {
-    console.error("❌ Error:", error.message);
+    console.error("Error:", error.message);
     process.exit(1);
   }
 };
