@@ -22,7 +22,7 @@ const totalItems = cart.products.reduce((sum , item)=> sum + item.quantity,0)
 
 const cartItems = cart.products.map(item => ({
   ...item.toObject(),
-  totalPrice: item.product.price * item.quantity,
+  totalPrice: item?.product?.price * item.quantity,
   
 }));
 // console.log(totalItems);
