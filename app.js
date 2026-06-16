@@ -9,7 +9,6 @@ import userRouter from "./routes/user.routes.js";
 import cartRouter from "./routes/cart.routes.js";
 import reviewProductRouter from "./routes/reviewProduct.route.js";
 import orderRouter from "./routes/order.route.js";
-
 const app = express();
 
 // middlewares
@@ -18,13 +17,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());
- // https://market-project-connected-with-back.vercel.app
+//https://market-project-connected-with-back.vercel.app
 
-app.use(cors(
-  {origin: "http://localhost:5173",
-  credentials: true,
-}
-))
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://market-project-connected-with-back.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 //routes:
 // for testing the server is working on vercel or not:
 app.get("/", (req, res) => {
