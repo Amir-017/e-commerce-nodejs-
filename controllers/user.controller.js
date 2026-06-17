@@ -4,7 +4,8 @@ import { errorHandling } from "../utils/errorHandling.js";
 import { httpError } from "../utils/httpError.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+import { Resend } from "resend";
+import nodemailer from "nodemailer";
 //////////////////////////////////////////////
 
 // get users
@@ -127,17 +128,50 @@ export const changePassword = errorHandling(async (req, res, next) => {
 // delete user
 
 //////////////////////////////////////////////
-export const delUser = errorHandling(async (req, res, next) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id))
-    return next(new httpError(400, "invalid user Id"));
+export const deleteUser = errorHandling(async (req, res, next) => {
+  const id = req.userId;
 
-  const delOne = await userModel.findByIdAndDelete(id);
-  if (!delOne) return next(new httpError(404, "User not found"));
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return next(new httpError(400, "invalid user Id"));
+  }
+
+  const user = await userModel.findById(id);
+  if (!user) return next(new httpError(404, "User not found"));
+
+ // configure nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.NODE_MILER_KEY,
+  },
+});
+ // send email to user before deleting account
+try {
+  const info = await transporter.sendMail({
+    from: `Market <${process.env.EMAIL_USER}>`, 
+    to: `${user.email}`,
+    subject: `Hello dear user ${user.name}`,
+    text: "i'd love to tell u your account has been deleted",
+    html: "<b>if you have any questions, please contact support.</b>",
+  });
+  console.log("Message sent: %s", info.messageId);
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+} catch (err) {
+  console.error("Error while sending mail:", err);
+}
+  
+  // 2. then delete user
+  const deletedUser = await userModel.findByIdAndDelete(id);
+
+  if (!deletedUser) {
+    return next(new httpError(404, "User not found"));
+  }
+
   res.json({
     status: 200,
     message: "user deleted successfully",
-    data: delOne,
+    data: deletedUser,
   });
 });
 

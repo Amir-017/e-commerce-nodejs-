@@ -4,7 +4,7 @@ import {
   registerUser,
   UserById,
   updateUser,
-  delUser,
+  deleteUser,
   loginUser,
   changePassword,
   changeRole,
@@ -29,7 +29,8 @@ router.post("/refreshToken", refreshNewToken);
 router.get("/profile",auth,authorize('admin','member'), UserById);
 router.patch("/editeProfile",auth,authorize('member','admin'), validatePatchUser, mainValidation, updateUser);
 router.patch("/convertPassword",auth,authorize('member'), changePassword);
-router.delete("/:id",auth,authorize('admin'), delUser);   
+router.delete("/deleteUser",auth,authorize('member','admin'), deleteUser);   
 router.patch("/:id/role",auth,authorize('admin'), changeRole);   
 
 export default router;
+    

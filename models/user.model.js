@@ -7,11 +7,9 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   // confirmedPassword: { type: String, required: true },
   role: { type: String, enum: ["admin", "member"], default: "member" },
-  // image:{   
-  //     type:String,
-  //     required:true
-  // }
-});
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
+},{ timestamps: true });
 
 // pre save    
 userSchema.pre("save", async function (next) {

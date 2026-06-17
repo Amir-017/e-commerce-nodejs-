@@ -205,7 +205,7 @@ export const updateProduct = errorHandling(async (req, res, next) => {
 //delete product
 
 //////////////////////////////////////////////
-export const delProduct = errorHandling(async (req, res, next) => {
+export const deleteProduct = errorHandling(async (req, res, next) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
     return next(new httpError(400, "Invalid product Id"));

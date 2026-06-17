@@ -4,7 +4,7 @@ import {
   ProductById,
   postProduct,
   updateProduct,
-  delProduct,
+  deleteProduct,
   allProductByCategory,
   allProductForSideBar
 } from "../controllers/prodcut.controller.js";
@@ -23,7 +23,7 @@ router.post("/",auth,authorize('admin'), createProductValidation, mainValidation
 router.get("/category/:categoryName", allProductByCategory);
 router.get("/:id", ProductById);
 router.patch("/:id",auth,authorize('admin'), updateProductValidation, mainValidation, updateProduct);
-router.delete("/:id",auth,authorize('admin'), delProduct);
+router.delete("/:id",auth,authorize('admin'), deleteProduct);
 
 export default router;
       

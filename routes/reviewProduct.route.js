@@ -6,8 +6,8 @@ import { validateReview } from "../utils/validationReviews.js";
 const router = express.Router();
 
 router.get("/",auth, authorize("admin"), getAllReviewProducts);
-router.post("/:productId", auth, validateReview, addReviewProduct);
-router.get("/:productId", auth, getReviewProductByProductId);
+router.post("/:productId", auth,authorize("member"), validateReview, addReviewProduct);
+router.get("/:productId", auth,authorize("admin","member"), getReviewProductByProductId);
 router.delete("/:id/:reviewId", auth, authorize("member","admin"), deleteReviewProduct);
 
 
