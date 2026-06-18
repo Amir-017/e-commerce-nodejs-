@@ -348,17 +348,6 @@ export const resetPassword = errorHandling(async (req, res, next) => {
     user.resetPasswordExpires = undefined;
     await user.save();
 
-    // const updatedUser = await userModel.findById(user._id);
-
-    // console.log("newPassword:", newPassword);
-    // console.log("savedHash:", updatedUser.password);
-
-    // const test = await bcrypt.compare(
-    //   newPassword,
-    //   updatedUser.password
-    // );
-
-    // console.log("TEST:", test);
     res.json({ message: "Password reset successfully" });
   } catch (err) {
     console.error("Error while resetting password:", err);
