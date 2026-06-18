@@ -12,13 +12,12 @@ const userSchema = new mongoose.Schema({
 },{ timestamps: true });
 
 // pre save    
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next(); // مهم لمنع إعادة hash
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return  
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  // this.confirmedPassword = await bcrypt.hash(this.confirmedPassword, salt);
-  // next()
+  
 });
 
 export const userModel = mongoose.model("User", userSchema);

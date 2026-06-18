@@ -113,6 +113,7 @@ export const changePassword = errorHandling(async (req, res, next) => {
 
   // const hashedPassword = await bcrypt.hash(newPassword, 10);
 
+  console.log(newPassword);
   user.password = newPassword;
   // hashedPassword;
 
@@ -138,29 +139,29 @@ export const deleteUser = errorHandling(async (req, res, next) => {
   const user = await userModel.findById(id);
   if (!user) return next(new httpError(404, "User not found"));
 
- // configure nodemailer transporter
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.NODE_MILER_KEY,
-  },
-});
- // send email to user before deleting account
-try {
-  const info = await transporter.sendMail({
-    from: `Market <${process.env.EMAIL_USER}>`, 
-    to: `${user.email}`,
-    subject: `Hello dear user ${user.name}`,
-    text: "i'd love to tell u your account has been deleted",
-    html: "<b>if you have any questions, please contact support.</b>",
+  // configure nodemailer transporter
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.NODE_MILER_KEY,
+    },
   });
-  console.log("Message sent: %s", info.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-} catch (err) {
-  console.error("Error while sending mail:", err);
-}
-  
+  // send email to user before deleting account
+  try {
+    const info = await transporter.sendMail({
+      from: `Market <${process.env.EMAIL_USER}>`,
+      to: `${user.email}`,
+      subject: `Hello dear user ${user.name}`,
+      text: "i'd love to tell u your account has been deleted",
+      html: "<b>if you have any questions, please contact support.</b>",
+    });
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  } catch (err) {
+    console.error("Error while sending mail:", err);
+  }
+
   // 2. then delete user
   const deletedUser = await userModel.findByIdAndDelete(id);
 
@@ -222,7 +223,9 @@ export const loginUser = errorHandling(async (req, res, next) => {
   if (!user) return next(new httpError(404, "Sorry you don't have an account, please register first"));
 
   const hashPassword = await bcrypt.compare(password, user.password);
-
+  console.log(password);
+  console.log(hashPassword);
+  console.log(user.password);
   if (!hashPassword) return next(new httpError(400, "Invalid password"));
 
   const accesstoken = jwt.sign(
@@ -277,5 +280,88 @@ export const refreshNewToken = errorHandling(async (req, res, next) => {
     res.json({ accesstoken: newToken });
   } catch (error) {
     next(new httpError(403, "token expired"));
+  }
+});
+
+///////////////////////////////////////////
+
+// forgot password
+
+///////////////////////////////////////////
+export const forgotPassword = errorHandling(async (req, res, next) => {
+  const { email } = req.body;
+  if (!email) return next(new httpError(400, "Please enter your email"));
+  const user = await userModel.findOne({ email });
+  if (!user) return next(new httpError(404, "User not found"));
+
+  const resetToken = jwt.sign({ id: user._id }, process.env.LOGIN_KEY, {
+    expiresIn: "15m",
+  });
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // token expires in 15 minutes
+  await user.save();
+
+  // create reset link
+  const resetLink = `http://localhost:5173/resetPassword?token=${resetToken}&email=${email}`;
+  // configure nodemailer transporter
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.NODE_MILER_KEY,
+    },
+  });
+  // send email to user with reset link
+  try {
+    const info = await transporter.sendMail({
+      from: `Market <${process.env.EMAIL_USER}>`,
+      to: `${user.email}`,
+      subject: `Hello dear user ${user.name}`,
+      text: `You requested a password reset. Click the link to reset your password: ${resetLink}`,
+      html: `<p>You requested a password reset. Click the link to reset your password:</p><a href="${resetLink}">${resetLink}</a>`,
+    });
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    res.json({ message: "Password reset link sent to your email" });
+  } catch (err) {
+    console.error("Error while sending mail:", err);
+    return next(new httpError(500, "Failed to send email"));
+  }
+});
+
+//////////////////////////////////////////////////
+
+// reset password
+
+//////////////////////////////////////////////////
+
+export const resetPassword = errorHandling(async (req, res, next) => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) return next(new httpError(400, "Please enter token and new password"));
+  try {
+    const decoded = jwt.verify(token, process.env.LOGIN_KEY);
+    const user = await userModel.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+    if (!user) return next(new httpError(400, "Invalid or expired token"));
+
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    // const updatedUser = await userModel.findById(user._id);
+
+    // console.log("newPassword:", newPassword);
+    // console.log("savedHash:", updatedUser.password);
+
+    // const test = await bcrypt.compare(
+    //   newPassword,
+    //   updatedUser.password
+    // );
+
+    // console.log("TEST:", test);
+    res.json({ message: "Password reset successfully" });
+  } catch (err) {
+    console.error("Error while resetting password:", err);
+    return next(new httpError(500, "Failed to reset password"));
   }
 });

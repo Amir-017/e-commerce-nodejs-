@@ -15,7 +15,7 @@ export const getCart = errorHandling(async (req, res, next) => {
     .populate("userName")
     .populate("products.product");   
    
-  if (!cart) return next(new httpError(404, "cart not found"));
+  if (!cart) return next(new httpError(200, data = null, "Your cart is empty go shopping"));
 // console.log(cart);
 const totalItems = cart.products.reduce((sum , item)=> sum + item.quantity,0)
 
@@ -25,8 +25,6 @@ const cartItems = cart.products.map(item => ({
   totalPrice: item?.product?.price * item.quantity,
   
 }));
-// console.log(totalItems);
-// console.log('total item is' + totalItems);
 
   res.json({
     status: 200,

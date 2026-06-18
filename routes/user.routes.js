@@ -10,6 +10,8 @@ import {
   changeRole,
   infoUser,
   refreshNewToken,
+  forgotPassword,
+  resetPassword
 
 } from "../controllers/user.controller.js";
 import {
@@ -31,6 +33,7 @@ router.patch("/editeProfile",auth,authorize('member','admin'), validatePatchUser
 router.patch("/convertPassword",auth,authorize('member'), changePassword);
 router.delete("/deleteUser",auth,authorize('member','admin'), deleteUser);   
 router.patch("/:id/role",auth,authorize('admin'), changeRole);   
-
+router.post("/forgotPassword", forgotPassword);
+router.post("/resetPassword", resetPassword);
 export default router;
     
