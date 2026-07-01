@@ -203,7 +203,7 @@ export const infoUser = errorHandling(async (req, res, next) => {
     .select("-password");
   res.json({
     status: 200,
-    message: "User info  successfully",
+    message: "User info retrieved successfully",
     infoAboutUser,
   });
 });
@@ -302,7 +302,7 @@ export const forgotPassword = errorHandling(async (req, res, next) => {
   await user.save();
 
   // create reset link
-  const resetLink = `http://localhost:5173/resetPassword?token=${resetToken}&email=${email}`;
+  const resetLink = `https://market-project-connected-with-back.vercel.app/resetPassword?token=${resetToken}&email=${email}`;
   // configure nodemailer transporter
   const transporter = nodemailer.createTransport({
     service: "gmail",
