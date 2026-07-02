@@ -130,7 +130,7 @@ export const changePassword = errorHandling(async (req, res, next) => {
 
 //////////////////////////////////////////////
 export const deleteUser = errorHandling(async (req, res, next) => {
-  const id = req.userId;
+  const id = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return next(new httpError(400, "invalid user Id"));
