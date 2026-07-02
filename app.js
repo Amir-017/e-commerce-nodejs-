@@ -9,6 +9,9 @@ import userRouter from "./routes/user.routes.js";
 import cartRouter from "./routes/cart.routes.js";
 import reviewProductRouter from "./routes/reviewProduct.route.js";
 import orderRouter from "./routes/order.route.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerSpec from "./swagger.js";
 const app = express();
 
 // middlewares
@@ -17,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //https://market-project-connected-with-back.vercel.app
 
 app.use(
