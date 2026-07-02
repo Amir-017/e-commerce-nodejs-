@@ -242,7 +242,7 @@ router.patch(
  *       401:
  *         description: Unauthorized.
  */
-router.patch("/convertPassword", auth, authorize("member"), changePassword);
+router.patch("/convertPassword", auth, authorize("member","admin"), changePassword);
 
 // delete user route with swagger documentation
 /**
